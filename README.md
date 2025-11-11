@@ -35,6 +35,12 @@ python3 exploit.py GDB DEBUG
 ```
 This will run the exploit locally, attach GDB to the process, and enable debug-level logging
 
+Output of the `DEBUG` log level:
+<p align="center">
+    <img src="DEBUG.png" alt="Pwntools Debug Output">
+</p>
+As you can see, it provides detailed information about the data being sent and received, which can be invaluable for debugging your exploit.
+
 ### Context settings
 Setting the context correctly is crucial for writing effective exploit scripts. It helps Pwntools understand the architecture and environment of the target binary. It is also useful for setting the logging level to control the verbosity of the output.
 
@@ -59,7 +65,7 @@ p = get_process()
 
 ```
 
-### getting addresses and symbols
+### Getting addresses and symbols
 Pwntools provides convenient methods to retrieve addresses of functions and symbols from the binary and linked libraries
 ```python
 main_addr = context.binary.symbols['main']  # Get address of main function
@@ -131,6 +137,8 @@ if not args.REMOTE and args.GDB:
     pause()  # Pause execution to allow GDB to attach
 ```
 This will launch GDB in a new terminal window and attach it to the running process, most likely pwndbg will be inside a strange looking read function, you can exit it with the `fin` command to return to the previous call in the backtrace.
+
+I suggest you to attach GDB right before sending the payload, so you can debug the exploit and see how the process behaves after receiving your payload; you can still launch the program with GDB from the start in another terminal and then use that GDB session instead, the choice is yours.
 
 ### Leaking addresses
 When exploiting binaries with ASLR enabled, leaking addresses is often necessary to bypass protections. Pwntools can help you parse leaked addresses easily.
