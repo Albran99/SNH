@@ -1,0 +1,10 @@
+.gdbinit
+.gdb_history
+.bashrc
+.env
+.vscode/
+.DS_Store
+.bash_history
+.bash_logout
+flag.txt
+.profile
