@@ -1,4 +1,8 @@
 # Tips and tricks for pwning
+<p align="center">
+    <img src="Barbaricum.png" alt="Barbaricum Logo">
+</p>
+
 This is a basic template for writing exploit scripts using the Pwntools library in Python. It includes common imports, setup for local and remote exploitation, and a structure for defining the exploit logic.
 
 Additionally it shows some neat tricks to make your exploit development easier.
