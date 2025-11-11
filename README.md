@@ -6,7 +6,7 @@ Additionally it shows some neat tricks to make your exploit development easier.
 Since many of you are dipping your toes into more serious exploitation, I think it is necessary to share some techniques that will help you in your journey and save you some time.
 
 This is a work in progress, so feel free to contribute with your own tips and tricks!
-
+### Fell free to ping me for additions or open pull request
 ## pwndbg 
 pwndbg is an awesome GDB plugin that enhances the debugging experience for binary exploitation. It provides useful features like automatic context display, heap visualization, and more.
 I will skip the installation instructions as many of you already have it installed.
