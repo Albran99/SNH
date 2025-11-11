@@ -15,6 +15,10 @@ This is a work in progress, so feel free to contribute with your own tips and tr
 pwndbg is an awesome GDB plugin that enhances the debugging experience for binary exploitation. It provides useful features like automatic context display, heap visualization, and more.
 I will skip the installation instructions as many of you already have it installed.
 
+Useful links (cheetsheet):
+- https://gist.github.com/Enigmatrix/89b09b4c97d541df3dd9e0d8ace9ed1a 
+- https://cheatography.com/cactuarnation/cheat-sheets/gdb-and-pwndbg/
+
 When launching a binary with pwndbg and you want to pass some initial commands to GDB, you can use the following syntax from shell:
 ```bash
 gdb vuln_binary -exec="set follow-fork-mode child" -exec="set detach-on-fork off" --exec="break main"
@@ -32,6 +36,8 @@ This will display a list of shared libraries loaded by the binary, including lib
 
 ## pwntools
 Pwntools is a powerful library for writing exploit scripts in Python. If used only for basic tasks, it's like using a Ferrari to go to the grocery store, good flex but not really necessary. Let's start with some useful tips and tricks to make the most out of it.
+
+You can find many more details in the official documentation: https://docs.pwntools.com/en/stable/ or in the excellent cheat sheet: https://gist.github.com/anvbis/64907e4f90974c4bdd930baeb705dedf
 
 When launching your exploit script, you can pass arguments to control its behavior. For example, you can use `REMOTE` to indicate that you want to connect to a remote service instead of running the binary locally. You can also use `GDB` to attach GDB to the process for debugging (you must implement this decision logic, but don't worry it is easy). I highly recommend using these flags to make your exploit scripts more versatile and especially use the `DEBUG` log level to get more insights about what is happening under the hood. For example:
 ```bash
