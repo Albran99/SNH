@@ -21,6 +21,15 @@ gdb vuln_binary -exec="set follow-fork-mode child" -exec="set detach-on-fork off
 ```
 By using the `-exec` flag, you can pass multiple commands to GDB that will be executed in sequence when the debugger starts; this is particularly useful when launching multiple times the same binary and you don't want to type the same commands over and over again.
 
+### Which libc am I using?
+When exploiting binaries, it's crucial to know which libc version is being used, by default pwndbg uses the system libc, which might differ from the one used by the target binary, especially in CTF challenges.
+To check which libc version is being used by the target binary, you can use the following GDB command:
+```gdb
+info sharedlibrary
+```
+This will display a list of shared libraries loaded by the binary, including libc. Look for the path of libc in the output to determine which version is being used.
+
+
 ## pwntools
 Pwntools is a powerful library for writing exploit scripts in Python. If used only for basic tasks, it's like using a Ferrari to go to the grocery store, good flex but not really necessary. Let's start with some useful tips and tricks to make the most out of it.
 
@@ -91,7 +100,7 @@ log.info(f"pop rdi; ret gadget address: {hex(pop_rdi)}")
 ```
 Pay attention that this can be janky at times, I highly recommend to double check the addresses with ropper. If you already found the gadgets manually, you can always hardcode them in the following way:
 ```python
-pop_rdi = p64(0x40123b)  # Replace with the actual address
+pop_rdi = p64(0x40123b) # Address of 'pop rdi; ret' gadget
 ```
 
 ### Crafting payloads
@@ -121,6 +130,15 @@ log.info(f"Received response: {response}")
 ```
 There are many other methods available for sending and receiving data, such as `send`, `recv`, `recvline`, `recvn`, etc. Refer to the Pwntools documentation for more details. 
 
+### Leaking addresses
+When exploiting binaries with ASLR enabled, leaking addresses is often necessary to bypass protections. Pwntools can help you parse leaked addresses easily.
+```python
+leak = p.recvline().strip()  # Receive a line containing the leaked address
+leaked_address = u64(leak.ljust(8, b'\x00')) # Unpack the leaked address
+log.info(f"Leaked address: {hex(leaked_address)}")
+```
+This example assumes the leaked address is 6 bytes long and pads it to 8 bytes for unpacking. Adjust accordingly based on your specific leak format.
+
 ### Interactive mode
 After sending the exploit payload, you might want to interact with the spawned shell or process. Pwntools provides an easy way to do this.
 ```python
@@ -140,11 +158,21 @@ This will launch GDB in a new terminal window and attach it to the running proce
 
 I suggest you to attach GDB right before sending the payload, so you can debug the exploit and see how the process behaves after receiving your payload; you can still launch the program with GDB from the start in another terminal and then use that GDB session instead, the choice is yours.
 
-### Leaking addresses
-When exploiting binaries with ASLR enabled, leaking addresses is often necessary to bypass protections. Pwntools can help you parse leaked addresses easily.
+Depending on the binary behavior, you might need to set some breakpoints or follow forks, for example this is the setup for rop3 challenge:
 ```python
-leak = p.recvline().strip()  # Receive a line containing the leaked address
-leaked_address = u64(leak.ljust(8, b'\x00')) # Unpack the leaked address
-log.info(f"Leaked address: {hex(leaked_address)}")
+context.binary = ELF('./rop3')
+local_instance = process('./rop3')
+context.terminal = ["tmux", "splitw", "-h"]
+gdb.attach(local_instance, """
+           set follow-fork-mode child
+           set detach-on-fork off
+           br child
+           """)
+pause()
+p = remote('localhost', 4493)
+p.sendline(payload)
+p.interactive()
 ```
-This example assumes the leaked address is 6 bytes long and pads it to 8 bytes for unpacking. Adjust accordingly based on your specific leak format.
+Pay attention that, in this case, I've taken no precautions to select which libc to use, meaning that gdb might use the your system libc, not the one provided with the challenge. This might lead to confusion when debugging, so be careful.
+
+
