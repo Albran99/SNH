@@ -77,9 +77,10 @@ When developing exploits, it's common to test them locally before deploying them
 def get_process():
     if args.REMOTE:
         return remote('example.com', 1337)  # Connect to remote service
-    else:
+    elif args.LOCALSERVER:
         return remote('localhost', 1337)    # Connect to local service
-
+    else:
+        return process('./vuln_binary')     # Run local binary
 p = get_process()
 
 ```
