@@ -5,7 +5,7 @@
 
 So you have finally decided to stop doing everything by hand, counting bytes in your head and writing complex one-liners in bash to exploit binaries. Congratulations, you are now leaving the *barbaricum* and entering the civilized world of exploit development with proper tools! 
 
-This is a basic template for writing exploit scripts using the Pwntools library in Python. It includes common imports, setup for local and remote exploitation, and a structure for defining the exploit logic.
+This is a basic guide for writing exploit scripts using the Pwntools library in Python. It includes common imports, setup for local and remote exploitation, and a structure for defining the exploit logic.
 
 Additionally it shows some neat tricks to make your exploit development easier.
 
