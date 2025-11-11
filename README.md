@@ -3,6 +3,8 @@
     <img src="Barbaricum.png" alt="Barbaricum Logo">
 </p>
 
+So you have finally decided to stop doing everything by hand, counting bytes in your head and writing complex one-liners in bash to exploit binaries. Congratulations, you are now leaving the *barbaricum* and entering the civilized world of exploit development with proper tools! 
+
 This is a basic template for writing exploit scripts using the Pwntools library in Python. It includes common imports, setup for local and remote exploitation, and a structure for defining the exploit logic.
 
 Additionally it shows some neat tricks to make your exploit development easier.
@@ -10,7 +12,7 @@ Additionally it shows some neat tricks to make your exploit development easier.
 Since many of you are dipping your toes into more serious exploitation, I think it is necessary to share some techniques that will help you in your journey and save you some time.
 
 This is a work in progress, so feel free to contribute with your own tips and tricks!
-### Fell free to ping me for additions or open pull request
+### Feel free to ping me for additions or open pull request
 ## pwndbg 
 pwndbg is an awesome GDB plugin that enhances the debugging experience for binary exploitation. It provides useful features like automatic context display, heap visualization, and more.
 I will skip the installation instructions as many of you already have it installed.
@@ -39,7 +41,9 @@ Pwntools is a powerful library for writing exploit scripts in Python. If used on
 
 You can find many more details in the official documentation: https://docs.pwntools.com/en/stable/ or in the excellent cheat sheet: https://gist.github.com/anvbis/64907e4f90974c4bdd930baeb705dedf
 
-When launching your exploit script, you can pass arguments to control its behavior. For example, you can use `REMOTE` to indicate that you want to connect to a remote service instead of running the binary locally. You can also use `GDB` to attach GDB to the process for debugging (you must implement this decision logic, but don't worry it is easy). I highly recommend using these flags to make your exploit scripts more versatile and especially use the `DEBUG` log level to get more insights about what is happening under the hood. For example:
+When launching your exploit script, you can pass arguments to control its behavior. For example, you can use `REMOTE` to indicate that you want to connect to a remote service instead of running the binary locally. You can also use `GDB` to attach GDB to the process for debugging (**you must implement this decision logic**, but don't worry it is easy - shown in the local vs remote section below). 
+
+I highly recommend using these flags to make your exploit scripts more versatile and especially use the `DEBUG` log level to get more insights about what is happening under the hood. For example:
 ```bash
 python3 exploit.py REMOTE DEBUG
 ```
@@ -151,6 +155,21 @@ After sending the exploit payload, you might want to interact with the spawned s
 p.interactive()  # Switch to interactive mode
 ```
 This allows you to interact with the process as if you were using a terminal, which is especially useful for shell exploits.
+
+### Shellcrafting and asm
+Pwntools includes a shellcraft module that allows you to generate shellcode for various architectures easily
+```python
+shellcode = asm(shellcraft.sh())  # Generate shellcode for spawning a shell
+log.info(f"Generated shellcode: {shellcode.hex()}")
+```
+You can then use this shellcode in your payloads as needed, don't forget to set the correct architecture in the context which will be used by the `asm` function. If you have the binary loaded in context, it will be set automatically.
+
+Additionally, you can generate single asm instructions:
+```python
+pop_rdi_instr = asm('pop rdi; ret')  # Generate machine code for 'pop rdi; ret' instruction
+log.info(f"Generated pop rdi; ret instruction: {pop_rdi_instr.hex()}")
+```
+This can be useful when you know that the injected payload will be executed as code, but for some reason you can't simply inject a shellcode or specific gadgets are not available.
 
 ### Attach to GDB
 Pwntools makes it easy to attach GDB to your process for debugging. This is particularly useful when developing and testing exploits and you want to inspect the state of the process.
