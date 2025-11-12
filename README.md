@@ -3,6 +3,9 @@
     - [pwndbg](#pwndbg)
         - [Which libc am I using?](#which-libc-am-i-using)
         - [Backtrace, how to read it?](#backtrace-how-to-read-it)
+        - [Printing memory regions](#printing-memory-regions)
+        - [Watchpoints](#watchpoints)
+        - [List of useful gdb commands](#list-of-useful-gdb-commands)
     - [pwntools](#pwntools)
         - [Context settings](#context-settings)
         - [Local vs Remote](#local-vs-remote)
@@ -69,6 +72,76 @@ As of now the backtrace might not seem very useful, but after you inject your pa
 </p>
 
 This is the backtrace after injecting a payload with a ROP chain. The backtrace shows that the after the `child` function, the next function to which the execution will return is an unknown address, being `0x7ffff7e2b796`, and then some more until we see `catfile`. This backtrace is a good indication that the ROP chain is well formed, as the return addresses will eventually land in the `catfile` function, which is the intended goal of the exploit. If for example we see the backtrace being abrouptly interrupted after a few frames or a suspicious looking address, it might indicate that the ROP chain is not well formed or that there is some issue with the payload. Naturally the backtrace alone is not enough to confirm that the exploit will work, you might have used the wrong gadgets or the wrong arguments, but it is a good starting point to verify that the control flow is being hijacked as expected. 
+
+## Printing memory regions
+Another useful feature of pwndbg is the ability to print memory regions in a more readable format. For example, if you want to inspect a structure or a buffer in memory, you can use the `x` command with different format specifiers. For example:
+```gdb
+x/32xb 0x7fffffffe000   # Print 32 bytes in hexadecimal
+x/8xg 0x7fffffffe000    # Print 8 words (8 bytes each) in hexadecimal
+x/4xw 0x7fffffffe000    # Print 4 double words (4 bytes each) in hexadecimal
+x/s 0x7fffffffe000      # Print as string
+```
+This allows you to inspect memory contents in a more structured way, making it easier to analyze data structures, buffers, and other memory regions.
+Additionally, pwndbg provides the `vis` command to visualize the heap and other memory regions, which can be very helpful when dealing with heap exploitation.
+Moreover you might want to do some searches in memory, for example to find a specific string or pattern:
+```gdb
+search -t string "target_string"    # Search for a string in memory
+search -8 42                        # Search for a specific value in memory
+```
+This can help you locate important data or code snippets in memory that are relevant to your exploitation efforts.
+Finally you might want to do some calculations with addresses, for example to find offsets or to compute addresses of specific structures:
+```gdb
+p/x 0x7fffffffe000 + 0x100  # Calculate an address
+p/x &some_variable + 0x20   # Calculate address of a variable plus an offset
+```
+This can help you navigate through memory and understand the layout of data structures in the target binary.
+Content of a register can be printed with:
+```gdb
+p/x $rax   # Print the content of the rax register in hexadecimal
+```
+
+## Watchpoints
+Watchpoints are a powerful feature in GDB that allow you to monitor changes to specific memory locations. This can be particularly useful when debugging complex programs or when trying to track down elusive bugs.
+To set a watchpoint on a memory address, you can use the following command:
+```gdb
+watch *(type *)address
+```
+For example, to watch a variable of type `int` at address `0x7fffffffe000`, you would use:
+```gdb
+watch *(int *)0x7fffffffe000
+```
+Once the watchpoint is set, GDB will pause execution whenever the value at the specified address changes, allowing you to inspect the program state and understand how and when the value is modified.
+You can also set watchpoints on registers, for example:
+```gdb
+watch $rax   # Watch changes to the rax register
+```
+Pay attention that watchpoints are printed before the register section in pwndbg, so if you don't see them, scroll up a bit, use the command `info watchpoints` to list them or `delete watchpoints` to remove them all.
+
+
+## List of useful gdb commands
+Here is a list of some useful GDB commands that can aid in debugging and exploitation:
+- `break function_name` or `b function_name`: Set a breakpoint at the beginning of a function.
+- `break *address` or `b *address`: Set a breakpoint at a specific address.
+- `run` or `r`: Start the program under GDB.
+- `continue` or `c`: Resume program execution after hitting a breakpoint.
+- `step` or `s`: Step into the next instruction or function call.
+- `next` or `n`: Step over the next instruction or function call.
+- `finish` or `fin`: Continue execution until the current function returns.
+- `info registers` or `i r`: Display the contents of all CPU registers.
+- `nexti` or `ni`: Step over the next instruction (for assembly-level debugging).
+- `stepi` or `si`: Step into the next instruction (for assembly-level debugging).
+- `nextcall`: Step over the next function call. 
+- `nextret`: Step over the next function return.
+- `vis`: Visualize the heap
+- `set follow-fork-mode child`: Set GDB to follow the child process after a fork.
+- `set detach-on-fork off`: Prevent GDB from detaching from the child process after a fork.
+- `info sharedlibrary`: Display a list of shared libraries loaded by the program
+- `vmmap`: Display the virtual memory map of the process
+- `set context-stack-lines N`: Set the number of stack lines to display in the context view.
+- `context`: Display the current context, including registers, stack, and disassembly.
+- `retaddr`: Show the return address of the current function.
+- `canary`: Display the value of the stack canary if present.
+- `disassemble foo`: Disassemble the function `foo`.
 
 
 ## pwntools
