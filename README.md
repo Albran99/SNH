@@ -2,6 +2,7 @@
 - [Tips and tricks for pwning](#tips-and-tricks-for-pwning)
     - [pwndbg](#pwndbg)
         - [Which libc am I using?](#which-libc-am-i-using)
+        - [Backtrace, how to read it?](#backtrace-how-to-read-it)
     - [pwntools](#pwntools)
         - [Context settings](#context-settings)
         - [Local vs Remote](#local-vs-remote)
