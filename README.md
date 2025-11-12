@@ -221,6 +221,8 @@ Pay attention that, in this case, I've taken no precautions to select which libc
 ## Memes
 When doing binary exploitation or doing challenges in general, you will bash your head against the wall many times. Here are some memes to cheer you up during those frustrating moments and to share with your friends to let them know what you are going through!
 
+![![Watch the demo](./images/Barbaricum.png)](https://github.com/Albran99/SNH/blob/main/images/gadget.mp4)
+
 ![Video1](https://github.com/Albran99/SNH/blob/main/images/gadget.mp4)
 
 ![Meme1](images/aslr.png)
