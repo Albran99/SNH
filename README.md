@@ -225,10 +225,9 @@ Interesting link:
 - https://x.com/i/status/1517501223938764802 
 - https://www.youtube.com/shorts/FbeaklEkMgM
 <p align="center">
-
-![Meme1](images/aslr.png)
-![Meme2](images/integer.png)
-![Meme3](https://imgs.xkcd.com/comics/pointers.png)
-![Meme4](images/memory_safety.png)
-![Meme5](images/borrow_checker.png)
+<img src="images/aslr.png" alt="ASLR Meme">
+<img src="images/integer.png" alt="Integer Overflow Meme">
+<img src="https://imgs.xkcd.com/comics/pointers.png" alt="Pointers Meme">
+<img src="images/memory_safety.png" alt="Memory Safety Meme">
+<img src="images/borrow_checker.png" alt="Rust Borrow Checker Meme">
 </p>
