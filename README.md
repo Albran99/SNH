@@ -51,6 +51,24 @@ info sharedlibrary
 ```
 This will display a list of shared libraries loaded by the binary, including libc. Look for the path of libc in the output to determine which version is being used.
 
+## Backtrace, how to read it?
+When debugging with GDB and pwndbg, you can see different *fields*: registers, instructions, stack and backtrace. The backtrace is often overlooked, but it is a powerful tool to understand the flow of the program and what is going on. Let's see how to read it.
+
+<p align="center">
+    <img src="images/Backtrace_before.png" alt="Pwndbg Backtrace">
+</p>
+
+In the above image, we can see a backtrace with 4 frames, a more detailed version can be obtained with the command `bt full`. Each frame represents a function call in the call stack, apart from the first frame which is the instuction that is about to be executed (that's why it displays `child+39`).
+
+The following frames represent the functions that were called to reach the current one. Meaning that `start` called `__libc_start_main` at offset 42, which in turn called `main` at line offset, which finally called `child` at offset 599. 
+
+As of now the backtrace might not seem very useful, but after you inject your payload you may see something more interesting, for example:
+<p align="center">
+    <img src="images/Backtrace_after.png" alt="Pwndbg Backtrace After Overflow">
+</p>
+
+This is the backtrace after injecting a payload with a ROP chain. The backtrace shows that the after the `child` function, the next function to which the execution will return is an unknown address, being `0x7ffff7e2b796`, and then some more until we see `catfile`. This backtrace is a good indication that the ROP chain is well formed, as the return addresses will eventually land in the `catfile` function, which is the intended goal of the exploit. If for example we see the backtrace being abrouptly interrupted after a few frames or a suspicious looking address, it might indicate that the ROP chain is not well formed or that there is some issue with the payload. Naturally the backtrace alone is not enough to confirm that the exploit will work, you might have used the wrong gadgets or the wrong arguments, but it is a good starting point to verify that the control flow is being hijacked as expected. 
+
 
 ## pwntools
 Pwntools is a powerful library for writing exploit scripts in Python. If used only for basic tasks, it's like using a Ferrari to go to the grocery store, good flex but not really necessary. Let's start with some useful tips and tricks to make the most out of it.
