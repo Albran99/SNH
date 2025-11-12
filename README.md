@@ -214,7 +214,7 @@ if not args.REMOTE and args.GDB:
     gdb.attach(p)
     pause()  # Pause execution to allow GDB to attach
 ```
-This will launch GDB in a new terminal window and attach it to the running process, most likely pwndbg will be inside a strange looking read function, you can exit it with the `fin` command to return to the previous call in the backtrace.
+This will launch GDB in a new terminal window and attach it to the running process, most likely pwndbg will be inside a strange looking function (read, accept, etc.), you can exit it with the `fin` command to return to the previous call in the backtrace.
 
 I suggest you to attach GDB right before sending the payload, so you can debug the exploit and see how the process behaves after receiving your payload; you can still launch the program with GDB from the start in another terminal and then use that GDB session instead, the choice is yours.
 
