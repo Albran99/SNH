@@ -16,6 +16,7 @@
         - [Interactive mode](#interactive-mode)
         - [Shellcrafting and asm](#shellcrafting-and-asm)
         - [Attach to GDB](#attach-to-gdb)
+    - [How to write a good writeup](#how-to-write-a-good-writeup)
     - [Memes](#memes)
 
 # Tips and tricks for pwning
@@ -308,6 +309,64 @@ p.sendline(payload)
 p.interactive()
 ```
 Pay attention that, in this case, I've taken no precautions to select which libc to use, meaning that gdb might use the your system libc, not the one provided with the challenge. This might lead to confusion when debugging, so be careful.
+
+
+## How to write a good writeup
+A simple copy paste from: https://lettieri.iet.unipi.it/snh-ctfd-25/writeups/2700
+
+You got the flag, congratulations! Now it's time to craft a well-organized writeup that demonstrates your work and helps others learn from your experience.
+
+There is no <em>right way</em>™️, although there certainly is a wrong one, to produce a writeup , it's plenty of examples from which to take inspiration, but usually we can reduce a writeup to three main steps plus one:
+<ol>
+    <li> Vulnerability analysis
+    <li> Attack vector
+    <li> Attack implentation
+    <li> Patch implementation (optional but recommended)
+</ol>
+Naturally you also need to include the flag, if found. 
+
+### Vulnerability analysis
+The Vulnerability analysis section contains all the information for the reader to understand what is the vulnerability and what does it actually means for the task at hand. For example:
+    
+    char buf[256];
+    gets(buf);
+
+    Using `gets()` without bounds checking can lead to a buffer overflow because it doesn't restrict input length.
+    This allows an attacker to overwrite adjacent memory, potentially controlling program flow.
+
+The above example is a code vulnerability, but vulnerabilities aren’t always in source code. For example, if the binary is compiled without security features like NX (No eXecute) or PIE (Position Independent Executables), these are important details to include. 
+
+### Attack vector
+This section describes your high-level plan for exploiting the vulnerability. Think of it as an overview of how you intend to leverage the vulnerability to achieve your goal.
+
+For example, if exploiting a buffer overflow, explain how you plan to overwrite the return address to redirect the program execution and for what purpose. Mention techniques like ROP (Return-Oriented Programming), stack pivoting, or other methods you intend to use.
+
+### Attack implementation
+This part is where you get into the technical details. The attack implementation section is often seen as the most important part of the writeup, and for good reason (but this does not mean that you can ignore the previous ones). 
+
+You should include code snippets, commands, and explanations that show each step of your exploitation process. You should explain how you implemented your attack plan from the previous section, and provide any necessary context for the reader to understand your code. This section should be detailed enough that someone else could replicate your attack based on the information provided.
+
+As a general rule of thumb, you should always try to explain <em>why</em> you are doing something, not only <em>what</em> you are doing, do not just dump a code snippet, explain what the code does and why you are using it. 
+
+For example, if you are dealing with a PIE enabled binary and you leaked an address to bypass ASLR, explain how you did so, why that leak was possible, and how you used it to calculate the base address of the binary.
+
+Finally here is where you should put the flag to show your accomplishment.
+
+### Patch implementation
+This section is not common, but it is always a good idea to include it, especially if you are in the learning phase. (In the exam it will be required) 
+
+In this section, you should describe how the vulnerability could be fixed whether by applying bounds checks, replacing unsafe functions with safer alternatives, or enabling security features like ASLR, NX, or stack canaries.
+
+Explain your patch and why your attack would no longer work. This not only shows your grasp of the vulnerability but also your understanding of an effective mitigation.
+
+### General rules of thumb
+- Don't just assume something it is obvious, explain it
+- The writeup should allow the reader to reproduce the attack completely 
+- Comment code snippets, don't just dump them
+- If calculations are needed, show them and their results
+- Writeup should be easy to read and follow, take your time to format it properly
+
+### When editing your writeup after a comment, please use the [edit] tag to show the changes 
 
 
 ## Memes
