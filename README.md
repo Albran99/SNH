@@ -11,7 +11,7 @@
         - [Leaking addresses](#leaking-addresses)
         - [Interactive mode](#interactive-mode)
         - [Shellcrafting and asm](#shellcrafting-and-asm)
-        - [Attach to GDB](#attach-to-gdb)-
+        - [Attach to GDB](#attach-to-gdb)
     - [Memes](#memes)
 
 # Tips and tricks for pwning
@@ -224,7 +224,6 @@ When doing binary exploitation or doing challenges in general, you will bash you
 Interesting link: 
 - https://x.com/i/status/1517501223938764802 
 - https://www.youtube.com/shorts/FbeaklEkMgM
-<iframe src="https://www.youtube.com/shorts/FbeaklEkMgM" width="500" height="600" frameborder="0"></iframe>
 
 ![Meme1](images/aslr.png)
 ![Meme2](images/integer.png)
