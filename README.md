@@ -1,6 +1,22 @@
+# Table of Contents
+- [Tips and tricks for pwning](#tips-and-tricks-for-pwning)
+    - [pwndbg](#pwndbg)
+        - [Which libc am I using?](#which-libc-am-i-using)
+    - [pwntools](#pwntools)
+        - [Context settings](#context-settings)
+        - [Local vs Remote](#local-vs-remote)
+        - [Getting addresses and symbols](#getting-addresses-and-symbols)
+        - [Crafting payloads](#crafting-payloads)
+        - [Sending and receiving data](#sending-and-receiving-data)
+        - [Leaking addresses](#leaking-addresses)
+        - [Interactive mode](#interactive-mode)
+        - [Shellcrafting and asm](#shellcrafting-and-asm)
+        - [Attach to GDB](#attach-to-gdb)-
+    - [Memes](#memes)
+
 # Tips and tricks for pwning
 <p align="center">
-    <img src="Barbaricum.png" alt="Barbaricum Logo">
+    <img src="images/Barbaricum.png" alt="Barbaricum Logo">
 </p>
 
 So you have finally decided to stop doing everything by hand, counting bytes in your head and writing complex one-liners in bash to exploit binaries. Congratulations, you are now leaving the *barbaricum* and entering the civilized world of exploit development with proper tools! 
@@ -56,7 +72,7 @@ This will run the exploit locally, attach GDB to the process, and enable debug-l
 
 Output of the `DEBUG` log level:
 <p align="center">
-    <img src="DEBUG.png" alt="Pwntools Debug Output">
+    <img src="images/DEBUG.png" alt="Pwntools Debug Output">
 </p>
 As you can see, it provides detailed information about the data being sent and received, which can be invaluable for debugging your exploit.
 
@@ -202,3 +218,13 @@ p.interactive()
 Pay attention that, in this case, I've taken no precautions to select which libc to use, meaning that gdb might use the your system libc, not the one provided with the challenge. This might lead to confusion when debugging, so be careful.
 
 
+## Memes
+When doing binary exploitation or doing challenges in general, you will bash your head against the wall many times. Here are some memes to cheer you up during those frustrating moments and to share with your friends to let them know what you are going through!
+
+![Video1](https://github.com/Albran99/SNH/images/gadget.mp4)
+
+![Meme1](images/aslr.png)
+![Meme2](images/integer.png)
+![Meme3](https://imgs.xkcd.com/comics/pointers.png)
+![Meme4](images/memory_safety.png)
+![Meme5](images/borrow_checker.png)
