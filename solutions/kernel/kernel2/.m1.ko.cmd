@@ -1,0 +1,1 @@
+cmd_/home/studenti/kernel/m1.ko := ld -r -EL  -maarch64elf -z noexecstack --no-warn-rwx-segments --build-id=sha1  -T arch/arm64/module.lds -o /home/studenti/kernel/m1.ko /home/studenti/kernel/m1.o /home/studenti/kernel/m1.mod.o;  true
