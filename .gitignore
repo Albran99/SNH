@@ -9,3 +9,4 @@
 flag.txt
 .profile
 venv/
+__pycache__/
